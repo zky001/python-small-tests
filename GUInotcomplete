@@ -1,0 +1,230 @@
+import tkinter
+# import Pmw
+from tkinter import *
+import tkinter.messagebox
+
+class Olapsearch(object):
+    def __init__(self):
+        self.root = tkinter.Tk()
+        # Code to add widgets will go here...
+        self.root.title("search for traffic data")
+        # self.root.iconbitmap("C:\\Users\\whywin7\\Pictures\\swjtu.jpg")
+        self.root.geometry('400x400')  # 是x 不是*
+        self.root.resizable(width=False, height=True)  # 宽不可变, 高可变,默认为True
+        l = Label(self.root, text="OLAP交通数据查询系统", bg="white", font=("Arial", 12), height=2)
+        l.pack(side=TOP)  # 这里的side可以赋值为LEFT  RTGHT TOP  BOTTOM
+
+    def user_login(self):
+        win = Olapsearch()
+        win.root.title("感谢登录·OLAP查询分析系统")
+        win.search()
+        self.root.destroy()
+
+    def admin_login(self):
+        win = Olapsearch()
+        win.root.title("感谢登录·OLAP查询管理系统")
+        win.add_entry()
+        self.root.destroy()
+
+    def add_entry(self):
+        Button(self.root, text="查询数据库", command=self.search).pack()
+
+        Button(self.root, text="管理用户数", command=self.save_OK).pack()
+        Button(self.root, text="操作数据库", command=self.xh_database).pack()
+        # tkinter.messagebox.showinfo('确定要录入数据库？', '数据保存在HIVE节点记录中')
+
+
+    def xh_database(self):
+        self.topV=tkinter.Tk()
+        self.topV.geometry('400x300')
+        self.topV.title('操作数据库')
+
+        area = StringVar(self.topV)
+        entry1 = Entry(self.topV, textvariable=area)
+        area.set("enter area name")
+        entry1.pack()
+        year = StringVar(self.topV)
+        entry3 = Entry(self.topV, textvariable=year)
+        year.set("enter year number")
+        entry3.pack()
+        mouth = StringVar(self.topV)
+        entry2 = Entry(self.topV, textvariable=mouth)
+        mouth.set("enter mouth number")
+        entry2.pack()
+        human_traffic = StringVar(self.topV)
+        entry4 = Entry(self.topV, textvariable=human_traffic)
+        human_traffic.set("enter human number")
+        entry4.pack()
+        goods_traffic = StringVar(self.topV)
+        entry5 = Entry(self.topV, textvariable=goods_traffic)
+        goods_traffic.set("enter goods number")
+        entry5.pack()
+        # self.topV.title("增加(更新)一条记录")
+        # tkinter.messagebox.showinfo('确定要录入数据库？', '数据保存在HIVE节点记录中')
+        Button(self.topV, text="对数据库增加(更新)一条记录", command=self.save_OK).pack()
+        Button(self.topV, text="对数据库删除(更新)一条记录", command=self.delete_OK).pack()
+
+        return
+
+    def search(self):
+        self.v = StringVar(self.root)
+        self.v.set('选择地区')
+        om = OptionMenu(self.root, self.v, '北京', '上海', '广州', '深圳', '天津', '重庆', '香港').pack()
+        self.v1 = StringVar(self.root)
+        self.v1.set('选择年份')
+        om1 = OptionMenu(self.root, self.v1, '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015',
+                         '2016').pack()
+        self.v2 = StringVar(self.root)
+        self.v2.set('选择月份')
+        om1 = OptionMenu(self.root, self.v2, '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11',
+                         '12').pack()
+        Button(self.root, text="查询", command=self.search_result).pack()
+        Button(self.root, text="高级查询", command=self.high_search).pack()
+        Button(self.root, text="退出系统", command=self.search_quit).pack()
+
+    def search_result(self):
+        # self.root.destroy()
+        print("地区 value is", self.v.get())
+        print("年份 value is", self.v1.get())
+        print("月份 value is", self.v2.get())
+        self.top = tkinter.Tk()
+        self.top.title("查询" + self.v.get() + "地区" + self.v1.get() + "年份" + self.v2.get() + "月份" + "结果如下：")
+        self.top.geometry('400x500')
+        Label(self.top, text="OLAP交通数据查询系统结果为", bg="white", font=("Arial", 12), height=2).pack()
+        Button(self.top, text="返回", command=self.result_quit).pack()
+        Button(self.top, text="保存", command=self.save_quit).pack()
+
+        # self.top.
+        return
+
+    def result_quit(self):
+        self.top.destroy()
+
+    def hresult_quit(self):
+        self.topH.destroy()
+
+    def save_quit(self):
+        tkinter.messagebox.showinfo('确定要保存结果吗？', '数据保存在查询记录中')
+        # self.top
+        return
+
+
+    def save_OK(self):
+        tkinter.messagebox.showinfo('确定要保存结果吗？', '数据保存在hive数据库中')
+        # self.top
+        return
+
+    def delete_OK(self):
+        tkinter.messagebox.showinfo('确定要删除结果吗？', '数据在hive数据库中')
+        tkinter.messagebox.showinfo('删除成功!', '点击✅继续进行数据库操作')
+
+
+    def search_quit(self):
+        self.root.destroy()
+
+    def high_search(self):
+        self.topH = tkinter.Tk()
+        self.topH.title('进行OLAP查询')
+        self.topH.geometry('400x400')
+        Button(self.topH, text="查询地区季度数据", command=self.mouth_rollup).pack()
+        Button(self.topH, text="查询区域月度数据", command=self.area_rollup).pack()
+
+        Button(self.topH, text="地区数据月度趋势图", command=self.area_comp_chart).pack()
+        Button(self.topH, text="地区数据年度趋势图", command=self.area_comp_chart).pack()
+
+        Button(self.topH, text="区域数据年度趋势图", command=self.area_mouth_chart).pack()
+        Button(self.topH, text="区域数据月度趋势图", command=self.area_mouth_chart).pack()
+
+        Button(self.topH, text="地区月度数据比较图", command=self.area_comp_chart).pack()
+        Button(self.topH, text="地区年度数据比较图", command=self.area_comp_chart).pack()
+
+        Button(self.topH, text="区域月度数据比较图", command=self.area_comp_chart).pack()
+        Button(self.topH, text="区域年度数据比较图", command=self.area_comp_chart).pack()
+
+        Button(self.topH, text="退出高级查询", command=self.hresult_quit).pack()
+
+
+    def area_mouth_chart(self):
+        self.topY = tkinter.Tk()
+        self.topY.geometry('400x500')
+        self.topY.title('地区数据趋势图高级查询')
+        self.va = StringVar(self.topY)
+        self.va.set('选择地区')
+        oma = OptionMenu(self.topY, self.va, '华北', '东北', '西南', '华中', '东南', '西北').pack()
+        self.va1 = StringVar(self.topY)
+        self.va1.set('选择年份')
+        oma1 = OptionMenu(self.topY, self.va1, '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016').pack()
+        # self.va2 = StringVar(self.topY)
+        # self.va2.set('选择月份')
+        # oma1 = OptionMenu(self.topY, self.va2, '01-02', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12').pack()
+        Button(self.topY, text="进行高级查询", ).pack()
+
+    def area_comp_chart(self):
+        self.topC = tkinter.Tk()
+        self.topC.geometry('400x500')
+        self.topC.title('高级地区比较查询')
+
+        self.vac = StringVar(self.topC)
+        self.vac.set('选择地区')
+        oma = OptionMenu(self.topC, self.vac, '华北', '东北', '西南', '华中', '东南', '西北').pack()
+        self.va = StringVar(self.topC)
+        self.va.set('选择地区')
+        oma = OptionMenu(self.topC, self.va, '华北', '东北', '西南', '华中', '东南', '西北').pack()
+        self.va1 = StringVar(self.topC)
+        self.va1.set('选择年份')
+        oma1 = OptionMenu(self.topC, self.va1, '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015','2016').pack()
+        self.va2 = StringVar(self.topC)
+        self.va2.set('选择月份')
+        oma1 = OptionMenu(self.topC, self.va2, '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11','12').pack()
+        # 在此进行地区月度数据比较图对 需要的元素的处理
+        Button(self.topC, text="进行高级查询", ).pack()
+
+    def area_rollup(self):
+        self.topA = tkinter.Tk()
+        self.topA.geometry('400x500')
+        self.topA.title('高级查询')
+        self.va = StringVar(self.topA)
+        self.va.set('选择地区')
+        oma = OptionMenu(self.topA, self.va, '华北', '东北', '西南', '华中', '东南', '西北').pack()
+        self.va1 = StringVar(self.topA)
+        self.va1.set('选择年份')
+        oma1 = OptionMenu(self.topA, self.va1, '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015','2016').pack()
+        self.va2 = StringVar(self.topA)
+        self.va2.set('选择月份')
+        oma1 = OptionMenu(self.topA, self.va2, '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11','12').pack()
+        Button(self.topA, text="进行高级查询", ).pack()
+
+    def mouth_rollup(self):
+        self.topM = tkinter.Tk()
+        self.topM.geometry('400x500')
+        self.topM.title('高级查询')
+        self.vm = StringVar(self.topM)
+        self.vm.set('选择城市')
+        omm = OptionMenu(self.topM, self.vm, '北京', '上海', '广州', '深圳', '天津', '重庆', '香港').pack()
+        self.vm1 = StringVar(self.topM)
+        self.vm1.set('选择年份')
+        omm1 = OptionMenu(self.topM, self.vm1, '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015',
+                         '2016').pack()
+        self.vm2 = StringVar(self.topM)
+        self.vm2.set('选择季度')
+        omm1 = OptionMenu(self.topM, self.vm2, '第一季度', '第二季度', '第三季度', '第四季度').pack()
+        Button(self.topM, text="进行高级查询", ).pack()
+
+    def enter_user(self):
+        varE = StringVar()
+        e = Entry(self.root, textvariable=varE)
+        varE.set("enter user name")
+        e.pack()
+
+        varE1 = StringVar()
+        e1 = Entry(self.root, textvariable=varE1)
+        varE1.set("enter user password")
+        e1.pack()
+        Button(self.root, text="登录", command=self.user_login).pack()
+        Button(self.root, text="管理", command=self.admin_login).pack()
+        Button(self.root, text="注册", command=self.user_login).pack()
+
+
+win = Olapsearch()
+win.enter_user()
+win.root.mainloop()
